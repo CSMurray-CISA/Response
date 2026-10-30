@@ -1,0 +1,108 @@
+{
+  "generated_at": "2026-10-30T12:59:07.546880+00:00",
+  "vendor": "Cisco",
+  "source": "https://sec.cloudapps.cisco.com/security/center/publicationListing.x",
+  "releases": [
+    {
+      "id": "cisco-sa-finesse-ssrf-mmsuyugs.json",
+      "title": "Cisco Finesse Server-Side Request Forgery Vulnerability",
+      "release_date": "2026-10-07T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-finesse-ssrf-mmSuyugS/csaf/cisco-sa-finesse-ssrf-mmSuyugS.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-finesse-ssrf-mmSuyugS%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-finesse-ssrf-mmsuyugs.json.json",
+      "count": 1
+    },
+    {
+      "id": "cisco-sa-sdwan-rpa-ehchtzk.json",
+      "title": "Cisco Catalyst SD-WAN Controller Authentication Bypass Vulnerability",
+      "release_date": "2026-02-25T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-sdwan-rpa-EHchtZk/csaf/cisco-sa-sdwan-rpa-EHchtZk.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-sdwan-rpa-EHchtZk%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-sdwan-rpa-ehchtzk.json.json",
+      "count": 1
+    },
+    {
+      "id": "cisco-sa-asaftd-tunnel-dos-s6mgkb75.json",
+      "title": "Cisco Secure Firewall Adaptive Security Appliance and Secure Firewall Threat Defense Software Remote Access SSL VPN Tunnel Denial of Service Vulnerability",
+      "release_date": "2026-10-28T19:15:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75/csaf/cisco-sa-asaftd-tunnel-dos-s6mgkb75.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-asaftd-tunnel-dos-s6mgkb75%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-asaftd-tunnel-dos-s6mgkb75.json.json",
+      "count": 1
+    },
+    {
+      "id": "cisco-sa-voice-hardening-twgbh9e3.json",
+      "title": "Cisco Unified Communications Products Security Hardening Release: October 2026",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-voice-hardening-twgbH9e3/csaf/cisco-sa-voice-hardening-twgbH9e3.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-voice-hardening-twgbH9e3%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-voice-hardening-twgbh9e3.json.json",
+      "count": 8
+    },
+    {
+      "id": "cisco-sa-exwy-hardening-fhcqbvcs.json",
+      "title": "Cisco Expressway Series Security Hardening Release: October 2026",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-exwy-hardening-FhcqBVcs/csaf/cisco-sa-exwy-hardening-FhcqBVcs.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-exwy-hardening-FhcqBVcs%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-exwy-hardening-fhcqbvcs.json.json",
+      "count": 8
+    },
+    {
+      "id": "cisco-sa-snort3-mime-vulns-bkxjckkt.json",
+      "title": "Multiple Cisco Products Snort 3 SMTP MIME Denial of Service Vulnerability",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-snort3-mime-vulns-bkXjcKkt/csaf/cisco-sa-snort3-mime-vulns-bkXjcKkt.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-snort3-mime-vulns-bkXjcKkt%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-snort3-mime-vulns-bkxjckkt.json.json",
+      "count": 1
+    },
+    {
+      "id": "cisco-sa-hardening-snort3-ybgmhtqe.json",
+      "title": "Multiple Cisco Products Snort 3 Security Hardening Release: October 2026",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-hardening-snort3-ybgmhTQe/csaf/cisco-sa-hardening-snort3-ybgmhTQe.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-hardening-snort3-ybgmhTQe%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-hardening-snort3-ybgmhtqe.json.json",
+      "count": 4
+    },
+    {
+      "id": "cisco-sa-snort3-misc-dos-6mb22qak.json",
+      "title": "Multiple Cisco Products Snort 3 Denial of Service Vulnerabilities",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-snort3-misc-dos-6mB22qAK/csaf/cisco-sa-snort3-misc-dos-6mB22qAK.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-snort3-misc-dos-6mB22qAK%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-snort3-misc-dos-6mb22qak.json.json",
+      "count": 4
+    },
+    {
+      "id": "cisco-sa-snort3-gre-jnpmhrtv.json",
+      "title": "Multiple Cisco Products Snort 3 Generic Routing Encapsulation Denial of Service Vulnerability",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-snort3-gre-JNpMHrTv/csaf/cisco-sa-snort3-gre-JNpMHrTv.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-snort3-gre-JNpMHrTv%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-snort3-gre-jnpmhrtv.json.json",
+      "count": 1
+    },
+    {
+      "id": "cisco-sa-snort3-gtpcodec-dos-rmecfepz.json",
+      "title": "Multiple Cisco Products Snort 3 Denial of Service Vulnerability",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-snort3-gtpcodec-dos-Rmecfepz/csaf/cisco-sa-snort3-gtpcodec-dos-Rmecfepz.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-snort3-gtpcodec-dos-Rmecfepz%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-snort3-gtpcodec-dos-rmecfepz.json.json",
+      "count": 1
+    },
+    {
+      "id": "cisco-sa-snort3-vba-bufdos-jaufdvn9.json",
+      "title": "Multiple Cisco Products Snort 3 Visual Basic for Applications Buffer Overflow Denial of Service Vulnerability",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-snort3-vba-bufdos-jAuFdvn9/csaf/cisco-sa-snort3-vba-bufdos-jAuFdvn9.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-snort3-vba-bufdos-jAuFdvn9%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-snort3-vba-bufdos-jaufdvn9.json.json",
+      "count": 1
+    },
+    {
+      "id": "cisco-sa-expressway-inf-disc-vvyqgsts.json",
+      "title": "Cisco Expressway Series Information Disclosure Vulnerability",
+      "release_date": "2026-10-21T16:00:00+00:00",
+      "advisory_url": "http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-expressway-inf-disc-vvYqgSTS/csaf/cisco-sa-expressway-inf-disc-vvYqgSTS.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-expressway-inf-disc-vvYqgSTS%26vs_k=1",
+      "data": "vendor-data/cisco/cisco-sa-expressway-inf-disc-vvyqgsts.json.json",
+      "count": 1
+    }
+  ],
+  "warnings": [
+    "Cisco http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-emudhra-info-ScS22A1r/csaf/cisco-sa-emudhra-info-ScS22A1r.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-emudhra-info-ScS22A1r%26vs_k=1: no CVE records found",
+    "Cisco http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-notice-I8z3n6lK/csaf/cisco-sa-notice-I8z3n6lK.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-notice-I8z3n6lK%26vs_k=1: no CVE records found",
+    "Cisco http://sec.cloudapps.cisco.com:80/security/center/content/CiscoSecurityAdvisory/cisco-sa-notice-QGwHnJ6k/csaf/cisco-sa-notice-QGwHnJ6k.json?vs_f=%26vs_cat=Security%20Intelligence%26vs_type=RSS%26vs_p=cisco-sa-notice-QGwHnJ6k%26vs_k=1: no CVE records found"
+  ]
+}
