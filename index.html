@@ -16,6 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script src="platform-preferences.js"></script>
     <style>
       :root {
         color-scheme: dark;
@@ -109,7 +110,8 @@
 
       .tool-tab .tab-label { color: inherit; }
 
-      .open-tool {
+      .open-tool,
+      .preferences-toggle {
         display: grid;
         width: 38px;
         height: 38px;
@@ -121,10 +123,60 @@
         background: #0f2119;
         font: 500 16px var(--sans);
         text-decoration: none;
+        cursor: pointer;
       }
 
-      .open-tool:hover { border-color: #4d896c; }
-      .open-tool:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .open-tool:hover, .preferences-toggle:hover { border-color: #4d896c; }
+      .open-tool:focus-visible, .preferences-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+      .preferences-panel {
+        position: fixed;
+        left: 50%;
+        bottom: 78px;
+        z-index: 110;
+        width: min(420px, calc(100% - 24px));
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        color: var(--ink);
+        background: var(--panel);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+        backdrop-filter: blur(16px);
+        transform: translateX(-50%);
+      }
+
+      .preferences-panel[hidden] { display: none; }
+      .preferences-panel h2 { margin: 0 0 4px; font: 700 16px var(--sans); letter-spacing: -0.03em; }
+      .preferences-panel > p { margin: 0 0 16px; color: var(--muted); font: 400 10px/1.5 var(--mono); }
+      .preference-group { display: grid; grid-template-columns: 100px 1fr; gap: 12px; align-items: center; margin: 10px 0 0; padding: 0; border: 0; }
+      .preference-group legend { display: contents; color: var(--muted); font: 500 10px var(--mono); text-transform: uppercase; letter-spacing: 0.07em; }
+      .preference-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+      .preference-options button {
+        min-height: 36px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--muted);
+        background: transparent;
+        font: 600 11px var(--sans);
+        cursor: pointer;
+      }
+      .preference-options button[aria-pressed="true"] { border-color: #3d7b5d; color: #04100a; background: var(--accent); }
+      .preference-options button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+      html[data-platform-theme="light"] {
+        color-scheme: light;
+        --ink: #10251b;
+        --muted: #526b5e;
+        --bg: #edf7f1;
+        --panel: rgba(248, 252, 250, 0.97);
+        --line: #b8d2c4;
+        --accent: #147a50;
+      }
+      html[data-platform-theme="light"] .tool-dock::before,
+      html[data-platform-theme="light"] .open-tool,
+      html[data-platform-theme="light"] .preferences-toggle { background: #e2f1e8; }
+      html[data-platform-theme="light"] .tool-tab[aria-selected="true"],
+      html[data-platform-theme="light"] .preference-options button[aria-pressed="true"] { color: #ffffff; }
 
       @media (max-width: 670px) {
         .tool-dock { bottom: 8px; width: calc(100% - 16px); justify-content: center; }
@@ -165,6 +217,25 @@
       hidden
     ></iframe>
 
+    <section class="preferences-panel" id="preferencesPanel" aria-labelledby="preferencesTitle" hidden>
+      <h2 id="preferencesTitle">Display preferences</h2>
+      <p>Saved in this browser and applied to every platform page.</p>
+      <fieldset class="preference-group">
+        <legend>Theme</legend>
+        <div class="preference-options">
+          <button type="button" data-pref-theme="dark">Dark</button>
+          <button type="button" data-pref-theme="light">Light</button>
+        </div>
+      </fieldset>
+      <fieldset class="preference-group">
+        <legend>Font size</legend>
+        <div class="preference-options">
+          <button type="button" data-pref-font="normal">Normal</button>
+          <button type="button" data-pref-font="large">Larger</button>
+        </div>
+      </fieldset>
+    </section>
+
     <nav class="tool-dock" role="tablist" aria-label="Vulnerability platform tools">
       <button class="tool-tab" id="advisoryTab" type="button" role="tab" aria-selected="true" aria-controls="advisoryView" data-tool="advisory">
         <span class="tab-number">01</span><span class="tab-label" data-short="Advisory">Advisory Analysis</span>
@@ -178,6 +249,7 @@
       <button class="tool-tab" id="kevSsvcTab" type="button" role="tab" aria-selected="false" aria-controls="kevSsvcView" data-tool="kev-ssvc" tabindex="-1">
         <span class="tab-number">04</span><span class="tab-label" data-short="KEV + SSVC">KEV with SSVC</span>
       </button>
+      <button class="preferences-toggle" id="preferencesToggle" type="button" aria-label="Display preferences" aria-expanded="false" aria-controls="preferencesPanel" title="Display preferences">Aa</button>
       <a class="open-tool" id="openTool" href="advisory-analysis.html" target="_blank" rel="noopener" aria-label="Open current tool in a new tab" title="Open current tool in a new tab">↗</a>
     </nav>
 
@@ -211,6 +283,41 @@
 
       const toolNames = Object.keys(tools);
       const openTool = document.getElementById("openTool");
+      const preferencesToggle = document.getElementById("preferencesToggle");
+      const preferencesPanel = document.getElementById("preferencesPanel");
+
+      function getPreferences() {
+        return window.advisoryLensPreferences?.read() || { theme: "dark", fontSize: "normal" };
+      }
+
+      function broadcastPreferences(preferences = getPreferences()) {
+        Object.values(tools).forEach(tool => {
+          if (tool.view.contentWindow) {
+            tool.view.contentWindow.postMessage({ type: "advisory-lens-preferences", ...preferences }, window.location.origin);
+          }
+        });
+      }
+
+      function syncPreferenceButtons() {
+        const preferences = getPreferences();
+        document.querySelectorAll("[data-pref-theme]").forEach(button => {
+          button.setAttribute("aria-pressed", String(button.dataset.prefTheme === preferences.theme));
+        });
+        document.querySelectorAll("[data-pref-font]").forEach(button => {
+          button.setAttribute("aria-pressed", String(button.dataset.prefFont === preferences.fontSize));
+        });
+      }
+
+      function savePreference(kind, value) {
+        const preferences = getPreferences();
+        if (kind === "theme") preferences.theme = value;
+        if (kind === "fontSize") preferences.fontSize = value;
+        localStorage.setItem(window.advisoryLensPreferences.keys.theme, preferences.theme);
+        localStorage.setItem(window.advisoryLensPreferences.keys.fontSize, preferences.fontSize);
+        window.advisoryLensPreferences.apply(preferences);
+        syncPreferenceButtons();
+        broadcastPreferences(preferences);
+      }
 
       function selectTool(name, updateHash = true) {
         const selected = tools[name] || tools.advisory;
@@ -235,6 +342,7 @@
       }
 
       toolNames.forEach((name, index) => {
+        tools[name].view.addEventListener("load", () => broadcastPreferences());
         tools[name].tab.addEventListener("click", () => selectTool(name));
         tools[name].tab.addEventListener("keydown", event => {
           if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
@@ -250,7 +358,31 @@
         });
       });
 
+      document.querySelectorAll("[data-pref-theme]").forEach(button => {
+        button.addEventListener("click", () => savePreference("theme", button.dataset.prefTheme));
+      });
+      document.querySelectorAll("[data-pref-font]").forEach(button => {
+        button.addEventListener("click", () => savePreference("fontSize", button.dataset.prefFont));
+      });
+      preferencesToggle.addEventListener("click", () => {
+        const opening = preferencesPanel.hidden;
+        preferencesPanel.hidden = !opening;
+        preferencesToggle.setAttribute("aria-expanded", String(opening));
+      });
+      document.addEventListener("click", event => {
+        if (preferencesPanel.hidden || preferencesPanel.contains(event.target) || preferencesToggle.contains(event.target)) return;
+        preferencesPanel.hidden = true;
+        preferencesToggle.setAttribute("aria-expanded", "false");
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key !== "Escape" || preferencesPanel.hidden) return;
+        preferencesPanel.hidden = true;
+        preferencesToggle.setAttribute("aria-expanded", "false");
+        preferencesToggle.focus();
+      });
+
       window.addEventListener("hashchange", () => selectTool(window.location.hash.slice(1), false));
+      syncPreferenceButtons();
       selectTool(window.location.hash.slice(1) || "advisory", false);
     </script>
   </body>

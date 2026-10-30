@@ -9,6 +9,8 @@ This GitHub Pages site combines four tools behind one Advisory Lens–styled swi
 
 Each tool runs in its own same-site frame. This keeps its HTML, styles, scripts, state, file uploads, filters, and exports isolated from the other tools. The Vulnerability Dashboard therefore retains the behavior of the original standalone version instead of the altered version from the combined SSVC repository.
 
+The **Aa** control in the platform switcher provides two saved display preferences: Dark or Light theme, and Normal or Larger text. Preferences are stored in the browser and synchronized across all four tools. The older page-specific theme controls are hidden so they cannot conflict with the platform setting.
+
 ## Publish with GitHub Pages
 
 Copy the complete contents of this folder into the root of the GitHub repository you want to publish. Keep all folders, including `.github`, `oracle-data`, and `vendor-data`.
@@ -41,6 +43,7 @@ The page reads only this same-site staged JSON file. It makes no live browser re
 - `vulnerability-dashboard.html`: original VulnDashboard standalone page
 - `ssvc-dashboard.html`, `oracle-data/`, `vendor-data/`: SSVC dashboard and tracked data
 - `platform-theme.css`: shared Advisory Lens visual theme for VulnDashboard and SSVC
+- `platform-preferences.js`: saved platform-wide light/dark and normal/larger display preferences
 - `kev-ssvc.html`, `kev-ssvc.css`, `kev-ssvc.js`: filterable KEV and SSVC interface
 - `data/kev-ssvc.json`: staged KEV/Vulnrichment dataset used by the fourth page
 - `scripts/build_kev_ssvc.py`: deterministic KEV and Vulnrichment merge tool

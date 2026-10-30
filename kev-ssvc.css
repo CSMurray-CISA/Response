@@ -214,3 +214,30 @@ body.kev-ssvc-dashboard {
   .pagination { justify-content: space-between; }
   .detail-grid { grid-template-columns: 1fr; }
 }
+
+html[data-platform-theme="light"] .dataset-state,
+html[data-platform-theme="light"] .filter-panel,
+html[data-platform-theme="light"] .kev-table-shell {
+  color: var(--al-ink);
+  background: rgba(248, 252, 250, 0.96);
+  border-color: var(--al-line);
+}
+
+html[data-platform-theme="light"] .kev-stats article {
+  background: linear-gradient(145deg, #ffffff, #edf7f1);
+  border-color: var(--al-line);
+}
+
+html[data-platform-theme="light"] .kev-table-scroll thead,
+html[data-platform-theme="light"] .kev-table-scroll th button {
+  color: var(--al-faint);
+  background: #e8f3ed;
+}
+
+html[data-platform-theme="light"] .kev-table-scroll th button:hover { color: var(--al-ink); background: #dfefe6; }
+html[data-platform-theme="light"] .kev-table-scroll td { color: #294b3a; border-color: var(--al-line); }
+html[data-platform-theme="light"] .kev-table-scroll tbody tr:hover { background: #e3f1e9; }
+html[data-platform-theme="light"] .cve-cell { color: var(--al-ink); }
+html[data-platform-theme="light"] #kevDetail { color: var(--al-ink); background: var(--al-panel); }
+html[data-platform-theme="light"] .detail-grid dd,
+html[data-platform-theme="light"] .detail-section p { color: #294b3a; }
