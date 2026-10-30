@@ -122,7 +122,16 @@ body.kev-ssvc-dashboard {
 .kev-table-scroll td:nth-child(4) { min-width: 280px; white-space: normal; line-height: 1.45; }
 .kev-table-scroll td:nth-child(2),
 .kev-table-scroll td:nth-child(3) { min-width: 150px; white-space: normal; }
-.cve-cell { color: var(--al-ink); font: 500 10px var(--al-mono); }
+.kev-table-scroll th:first-child,
+.kev-table-scroll td:first-child { min-width: 160px; width: 160px; white-space: nowrap; }
+.cve-cell {
+  display: inline-block;
+  color: var(--al-ink);
+  font: 500 10px var(--al-mono);
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
 .cwe-cell { color: var(--al-blue); font-family: var(--al-mono); }
 .cvss-score { display: inline-flex; align-items: center; gap: 5px; color: var(--al-ink); font: 500 10px var(--al-mono); }
 .cvss-score small { color: var(--al-faint); font-size: 8px; }

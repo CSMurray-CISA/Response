@@ -45,6 +45,35 @@ const escapeHtml = value => String(value ?? "")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
 
+const TABLE_COLUMNS = [
+  {
+    key: "cve",
+    label: "CVE",
+    render: row => `<span class="cve-cell">${escapeHtml(row.cve)}</span>`,
+    csv: row => row.cve
+  },
+  { key: "vendor", label: "Vendor", render: row => escapeHtml(row.vendor || "—"), csv: row => row.vendor },
+  { key: "product", label: "Product", render: row => escapeHtml(row.product || "—"), csv: row => row.product },
+  { key: "vulnerabilityName", label: "Vulnerability name", render: row => escapeHtml(row.vulnerabilityName || "—"), csv: row => row.vulnerabilityName },
+  {
+    key: "cvss",
+    label: "CVSS",
+    render: row => cvssHtml(row),
+    csv: row => row.cvss?.score === undefined ? "" : `${row.cvss.score}${row.cvss.version ? ` (v${row.cvss.version})` : ""}`
+  },
+  { key: "exploitation", label: "Exploitation", render: row => badge(row.exploitation), csv: row => row.exploitation },
+  { key: "technicalImpact", label: "Technical impact", render: row => badge(row.technicalImpact), csv: row => row.technicalImpact },
+  { key: "automatable", label: "Automatable", render: row => badge(row.automatable), csv: row => row.automatable },
+  {
+    key: "cwes",
+    label: "CWE",
+    render: row => `<span class="cwe-cell">${escapeHtml((row.cwes || []).join(", ") || "—")}</span>`,
+    csv: row => (row.cwes || []).join("; ")
+  },
+  { key: "dateAdded", label: "KEV added", className: "date-cell", render: row => escapeHtml(row.dateAdded || "—"), csv: row => row.dateAdded },
+  { key: "dueDate", label: "KEV due", className: "date-cell", render: row => escapeHtml(row.dueDate || "—"), csv: row => row.dueDate }
+];
+
 function titleCase(value) {
   const text = String(value || "unknown");
   if (text === "poc") return "PoC";
@@ -161,18 +190,15 @@ function renderRows() {
 
   elements.rows.innerHTML = rows.map(row => `
     <tr data-cve="${escapeHtml(row.cve)}" tabindex="0" aria-label="Open details for ${escapeHtml(row.cve)}">
-      <td><span class="cve-cell">${escapeHtml(row.cve)}</span></td>
-      <td>${escapeHtml(row.vendor || "—")}</td>
-      <td>${escapeHtml(row.product || "—")}</td>
-      <td>${escapeHtml(row.vulnerabilityName || "—")}</td>
-      <td>${cvssHtml(row)}</td>
-      <td>${badge(row.exploitation)}</td>
-      <td>${badge(row.technicalImpact)}</td>
-      <td>${badge(row.automatable)}</td>
-      <td><span class="cwe-cell">${escapeHtml((row.cwes || []).join(", ") || "—")}</span></td>
-      <td class="date-cell">${escapeHtml(row.dateAdded || "—")}</td>
-      <td class="date-cell">${escapeHtml(row.dueDate || "—")}</td>
+      ${TABLE_COLUMNS.map(column => `<td${column.className ? ` class="${column.className}"` : ""}>${column.render(row)}</td>`).join("")}
     </tr>`).join("");
+}
+
+function renderTableHeader() {
+  const headerRow = document.getElementById("kevHeaderRow") || document.querySelector(".kev-table-scroll thead tr");
+  if (!headerRow) return;
+  headerRow.innerHTML = TABLE_COLUMNS.map(column => `
+    <th><button type="button" data-sort="${escapeHtml(column.key)}">${escapeHtml(column.label)} <span>↕</span></button></th>`).join("");
 }
 
 function renderStats() {
@@ -225,12 +251,8 @@ function csvCell(value) {
 }
 
 function exportCsv() {
-  const headers = ["CVE", "Vendor", "Product", "Vulnerability Name", "CVSS", "CVSS Version", "Exploitation State", "Technical Impact", "Automatable", "CWE", "KEV Added Date", "KEV Due Date"];
-  const lines = [headers.map(csvCell).join(",")];
-  state.filtered.forEach(row => lines.push([
-    row.cve, row.vendor, row.product, row.vulnerabilityName, row.cvss?.score ?? "", row.cvss?.version ?? "",
-    row.exploitation, row.technicalImpact, row.automatable, (row.cwes || []).join("; "), row.dateAdded, row.dueDate
-  ].map(csvCell).join(",")));
+  const lines = [TABLE_COLUMNS.map(column => csvCell(column.label)).join(",")];
+  state.filtered.forEach(row => lines.push(TABLE_COLUMNS.map(column => csvCell(column.csv(row))).join(",")));
   const blob = new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -333,5 +355,6 @@ async function loadData() {
   }
 }
 
+renderTableHeader();
 bindEvents();
 loadData();
