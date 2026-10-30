@@ -1,0 +1,26 @@
+{
+  "vendor": "Fortinet",
+  "vendor_id": "fortinet",
+  "title": "Open Redirect on FortiSIEM",
+  "source_url": "https://fortiguard.fortinet.com/psirt/FG-IR-26-169",
+  "release_date": "",
+  "vulnerabilities": [
+    {
+      "cve": "CVE-2026-84389",
+      "description": "CVE ID",
+      "vector": "",
+      "cvss": "",
+      "severity": "UNKNOWN",
+      "product": "Open Redirect on FortiSIEM",
+      "component": "",
+      "published_date": "",
+      "exploitation": "none",
+      "details": {
+        "source_row": [
+          "CVE ID",
+          "CVE-2026-84389"
+        ]
+      }
+    }
+  ]
+}

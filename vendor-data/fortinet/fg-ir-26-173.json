@@ -1,0 +1,26 @@
+{
+  "vendor": "Fortinet",
+  "vendor_id": "fortinet",
+  "title": "Null Pointer Dereference in Log Report",
+  "source_url": "https://fortiguard.fortinet.com/psirt/FG-IR-26-173",
+  "release_date": "",
+  "vulnerabilities": [
+    {
+      "cve": "CVE-2026-84392",
+      "description": "CVE ID",
+      "vector": "",
+      "cvss": "",
+      "severity": "UNKNOWN",
+      "product": "Null Pointer Dereference in Log Report",
+      "component": "",
+      "published_date": "",
+      "exploitation": "none",
+      "details": {
+        "source_row": [
+          "CVE ID",
+          "CVE-2026-84392"
+        ]
+      }
+    }
+  ]
+}

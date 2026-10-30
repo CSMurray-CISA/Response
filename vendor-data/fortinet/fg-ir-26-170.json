@@ -1,0 +1,26 @@
+{
+  "vendor": "Fortinet",
+  "vendor_id": "fortinet",
+  "title": "JWT used for authentication in web GUI signed with static key",
+  "source_url": "https://fortiguard.fortinet.com/psirt/FG-IR-26-170",
+  "release_date": "",
+  "vulnerabilities": [
+    {
+      "cve": "CVE-2026-84390",
+      "description": "CVE ID",
+      "vector": "",
+      "cvss": "",
+      "severity": "UNKNOWN",
+      "product": "JWT used for authentication in web GUI signed with static key",
+      "component": "",
+      "published_date": "",
+      "exploitation": "none",
+      "details": {
+        "source_row": [
+          "CVE ID",
+          "CVE-2026-84390"
+        ]
+      }
+    }
+  ]
+}

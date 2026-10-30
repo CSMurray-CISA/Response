@@ -1,0 +1,26 @@
+{
+  "vendor": "Fortinet",
+  "vendor_id": "fortinet",
+  "title": "Vulnerability in OpenSSL library",
+  "source_url": "https://fortiguard.fortinet.com/psirt/FG-IR-22-059",
+  "release_date": "",
+  "vulnerabilities": [
+    {
+      "cve": "CVE-2022-0778",
+      "description": "CVE ID",
+      "vector": "",
+      "cvss": "",
+      "severity": "UNKNOWN",
+      "product": "Vulnerability in OpenSSL library",
+      "component": "",
+      "published_date": "",
+      "exploitation": "none",
+      "details": {
+        "source_row": [
+          "CVE ID",
+          "CVE-2022-0778"
+        ]
+      }
+    }
+  ]
+}
