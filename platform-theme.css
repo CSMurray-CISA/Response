@@ -537,6 +537,7 @@ body.ssvc-dashboard .UNAVAILABLE { color: #e6d8cf; background: #5c463a; }
 
 /* Platform-wide saved preferences. */
 html[data-platform-font="large"] body.advisory-ui { zoom: 1.12; }
+html[data-platform-font="extra-large"] body.advisory-ui { zoom: 1.3; }
 
 html[data-platform-theme="dark"] {
   color-scheme: dark;

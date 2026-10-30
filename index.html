@@ -151,6 +151,7 @@
       .preference-group { display: grid; grid-template-columns: 100px 1fr; gap: 12px; align-items: center; margin: 10px 0 0; padding: 0; border: 0; }
       .preference-group legend { display: contents; color: var(--muted); font: 500 10px var(--mono); text-transform: uppercase; letter-spacing: 0.07em; }
       .preference-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+      .preference-options.font-options { grid-template-columns: repeat(3, 1fr); }
       .preference-options button {
         min-height: 36px;
         border: 1px solid var(--line);
@@ -229,9 +230,10 @@
       </fieldset>
       <fieldset class="preference-group">
         <legend>Font size</legend>
-        <div class="preference-options">
+        <div class="preference-options font-options">
           <button type="button" data-pref-font="normal">Normal</button>
           <button type="button" data-pref-font="large">Larger</button>
+          <button type="button" data-pref-font="extra-large">Extra large</button>
         </div>
       </fieldset>
     </section>

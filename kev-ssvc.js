@@ -21,7 +21,7 @@ const elements = {
   to: document.getElementById("dateTo"),
   impact: document.getElementById("impactFilter"),
   automatable: document.getElementById("automatableFilter"),
-  exploitation: document.getElementById("exploitationFilter"),
+  forensicTriage: document.getElementById("forensicTriageFilter"),
   vendor: document.getElementById("vendorFilter"),
   product: document.getElementById("productFilter"),
   reset: document.getElementById("resetFilters"),
@@ -61,7 +61,6 @@ const TABLE_COLUMNS = [
     render: row => cvssHtml(row),
     csv: row => row.cvss?.score === undefined ? "" : `${row.cvss.score}${row.cvss.version ? ` (v${row.cvss.version})` : ""}`
   },
-  { key: "exploitation", label: "Exploitation", render: row => badge(row.exploitation), csv: row => row.exploitation },
   { key: "technicalImpact", label: "Technical impact", render: row => badge(row.technicalImpact), csv: row => row.technicalImpact },
   { key: "automatable", label: "Automatable", render: row => badge(row.automatable), csv: row => row.automatable },
   {
@@ -71,7 +70,8 @@ const TABLE_COLUMNS = [
     csv: row => (row.cwes || []).join("; ")
   },
   { key: "dateAdded", label: "KEV added", className: "date-cell", render: row => escapeHtml(row.dateAdded || "—"), csv: row => row.dateAdded },
-  { key: "dueDate", label: "KEV due", className: "date-cell", render: row => escapeHtml(row.dueDate || "—"), csv: row => row.dueDate }
+  { key: "dueDate", label: "KEV due", className: "date-cell", render: row => escapeHtml(row.dueDate || "—"), csv: row => row.dueDate },
+  { key: "forensicTriage", label: "Forensic triage", render: row => badge(row.forensicTriage), csv: row => row.forensicTriage }
 ];
 
 function titleCase(value) {
@@ -135,7 +135,7 @@ function applyFilters() {
   const to = elements.to.value;
   const impact = elements.impact.value;
   const automatable = elements.automatable.value;
-  const exploitation = elements.exploitation.value;
+  const forensicTriage = elements.forensicTriage.value;
   const vendor = elements.vendor.value;
   const product = elements.product.value;
 
@@ -145,7 +145,7 @@ function applyFilters() {
     if (to && row.dateAdded > to) return false;
     if (impact && row.technicalImpact !== impact) return false;
     if (automatable && row.automatable !== automatable) return false;
-    if (exploitation && row.exploitation !== exploitation) return false;
+    if (forensicTriage && row.forensicTriage !== forensicTriage) return false;
     if (vendor && row.vendor !== vendor) return false;
     if (product && row.product !== product) return false;
     return true;
@@ -235,7 +235,7 @@ function render() {
 }
 
 function resetFilters() {
-  [elements.search, elements.from, elements.to, elements.impact, elements.automatable, elements.exploitation, elements.vendor]
+  [elements.search, elements.from, elements.to, elements.impact, elements.automatable, elements.forensicTriage, elements.vendor]
     .forEach(element => { element.value = ""; });
   populateProducts();
   elements.product.value = "";
@@ -279,9 +279,10 @@ function openDetails(cve) {
       <dt>Vendor / product</dt><dd>${escapeHtml(row.vendor)} / ${escapeHtml(row.product)}</dd>
       <dt>CWE</dt><dd>${escapeHtml((row.cwes || []).join(", ") || "Unknown")} ${row.cweSource ? `· ${escapeHtml(row.cweSource)}` : ""}</dd>
       <dt>CVSS</dt><dd>${row.cvss?.score ?? "Unknown"}${row.cvss?.version ? ` (v${escapeHtml(row.cvss.version)})` : ""}${row.cvssSource ? ` · ${escapeHtml(row.cvssSource)}` : ""}</dd>
-      <dt>SSVC</dt><dd>${badge(row.exploitation)} ${badge(row.technicalImpact)} ${badge(row.automatable)}</dd>
+      <dt>SSVC</dt><dd>${badge(row.technicalImpact)} ${badge(row.automatable)}</dd>
       <dt>SSVC source</dt><dd>${escapeHtml(row.ssvcSource || "Unknown")}${row.ssvcVersion ? ` · version ${escapeHtml(row.ssvcVersion)}` : ""}</dd>
       <dt>KEV dates</dt><dd>Added ${escapeHtml(row.dateAdded || "Unknown")} · due ${escapeHtml(row.dueDate || "Unknown")}</dd>
+      <dt>Forensic triage</dt><dd>${badge(row.forensicTriage)}</dd>
       <dt>Ransomware use</dt><dd>${escapeHtml(row.knownRansomwareCampaignUse || "Unknown")}</dd>
     </dl>
     <section class="detail-section"><h3>Description</h3><p>${escapeHtml(row.shortDescription || "No description provided.")}</p></section>
@@ -296,7 +297,7 @@ function openDetails(cve) {
 }
 
 function bindEvents() {
-  [elements.search, elements.from, elements.to, elements.impact, elements.automatable, elements.exploitation, elements.product]
+  [elements.search, elements.from, elements.to, elements.impact, elements.automatable, elements.forensicTriage, elements.product]
     .forEach(element => element.addEventListener(element === elements.search ? "input" : "change", () => {
       state.page = 1;
       applyFilters();

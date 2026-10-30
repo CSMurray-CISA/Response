@@ -32,7 +32,7 @@ The entire `oracle-data/` and `vendor-data/` directories must remain in the repo
 
 ## KEV with SSVC refresh
 
-The **Refresh KEV with SSVC data** workflow runs hourly and can also be started manually. It downloads the current KEV catalog from `cisagov/kev-data`, checks out only the matching CVE records from `cisagov/vulnrichment`, merges the data into `data/kev-ssvc.json`, runs the test suite, and commits only when the staged dataset changes.
+The **Refresh KEV with SSVC data** workflow runs hourly and can also be started manually. It downloads the current KEV catalog from `cisagov/kev-data`, checks out only the matching CVE records from `cisagov/vulnrichment`, merges the data into `data/kev-ssvc.json`, runs the test suite, and commits only when the staged dataset changes. The KEV page includes CISA's forensic-triage value as a sortable, filterable column.
 
 The page reads only this same-site staged JSON file. It makes no live browser requests to CISA.gov, CVE.org, NVD, or GitHub. The initial staged dataset is already included, so the page works before the first Action run.
 
@@ -43,7 +43,7 @@ The page reads only this same-site staged JSON file. It makes no live browser re
 - `vulnerability-dashboard.html`: original VulnDashboard standalone page
 - `ssvc-dashboard.html`, `oracle-data/`, `vendor-data/`: SSVC dashboard and tracked data
 - `platform-theme.css`: shared Advisory Lens visual theme for VulnDashboard and SSVC
-- `platform-preferences.js`: saved platform-wide light/dark and normal/larger display preferences
+- `platform-preferences.js`: saved platform-wide light/dark and normal/larger/extra-large display preferences
 - `kev-ssvc.html`, `kev-ssvc.css`, `kev-ssvc.js`: filterable KEV and SSVC interface
 - `data/kev-ssvc.json`: staged KEV/Vulnrichment dataset used by the fourth page
 - `scripts/build_kev_ssvc.py`: deterministic KEV and Vulnrichment merge tool

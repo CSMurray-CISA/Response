@@ -4,7 +4,7 @@
   const THEME_KEY = "advisoryLensTheme";
   const FONT_KEY = "advisoryLensFontSize";
   const validThemes = new Set(["dark", "light"]);
-  const validFonts = new Set(["normal", "large"]);
+  const validFonts = new Set(["normal", "large", "extra-large"]);
 
   function currentPreferences() {
     const savedTheme = localStorage.getItem(THEME_KEY);

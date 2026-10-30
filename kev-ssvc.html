@@ -60,8 +60,8 @@
           <label>Automatable
             <select id="automatableFilter"><option value="">All values</option><option value="yes">Yes</option><option value="no">No</option><option value="unknown">Unknown</option></select>
           </label>
-          <label>Exploitation
-            <select id="exploitationFilter"><option value="">All states</option><option value="active">Active</option><option value="poc">PoC</option><option value="none">None</option><option value="unknown">Unknown</option></select>
+          <label>Forensic triage
+            <select id="forensicTriageFilter"><option value="">All values</option><option value="yes">Yes</option><option value="no">No</option><option value="unknown">Unknown</option></select>
           </label>
           <label>Vendor
             <select id="vendorFilter"><option value="">All vendors</option></select>
@@ -86,12 +86,12 @@
                 <th><button type="button" data-sort="product">Product <span>↕</span></button></th>
                 <th><button type="button" data-sort="vulnerabilityName">Vulnerability name <span>↕</span></button></th>
                 <th><button type="button" data-sort="cvss">CVSS <span>↕</span></button></th>
-                <th><button type="button" data-sort="exploitation">Exploitation <span>↕</span></button></th>
                 <th><button type="button" data-sort="technicalImpact">Technical impact <span>↕</span></button></th>
                 <th><button type="button" data-sort="automatable">Automatable <span>↕</span></button></th>
                 <th><button type="button" data-sort="cwes">CWE <span>↕</span></button></th>
                 <th><button type="button" data-sort="dateAdded">KEV added <span>↕</span></button></th>
                 <th><button type="button" data-sort="dueDate">KEV due <span>↕</span></button></th>
+                <th><button type="button" data-sort="forensicTriage">Forensic triage <span>↕</span></button></th>
               </tr>
             </thead>
             <tbody id="kevRows"><tr><td colspan="11" class="loading-cell">Loading staged catalog…</td></tr></tbody>
