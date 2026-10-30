@@ -1,1 +1,64 @@
-.github/workflows/refresh-kev-ssvc.yml
+name: Refresh KEV with SSVC data
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kev-ssvc-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Download current KEV catalog
+        run: |
+          mkdir -p "$RUNNER_TEMP/kev-source"
+          curl --fail --location --retry 3 \
+            https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json \
+            --output "$RUNNER_TEMP/kev-source/known_exploited_vulnerabilities.json"
+
+      - name: Prepare a minimal Vulnrichment checkout
+        run: |
+          python3 scripts/build_kev_ssvc.py \
+            --kev "$RUNNER_TEMP/kev-source/known_exploited_vulnerabilities.json" \
+            --write-sparse-paths "$RUNNER_TEMP/kev-source/vulnrichment-paths.txt"
+          git clone --filter=blob:none --no-checkout --depth 1 --branch develop \
+            https://github.com/cisagov/vulnrichment.git \
+            "$RUNNER_TEMP/kev-source/vulnrichment"
+          git -C "$RUNNER_TEMP/kev-source/vulnrichment" sparse-checkout set --no-cone --stdin \
+            < "$RUNNER_TEMP/kev-source/vulnrichment-paths.txt"
+          git -C "$RUNNER_TEMP/kev-source/vulnrichment" checkout
+
+      - name: Build staged KEV and SSVC data
+        run: |
+          python3 scripts/build_kev_ssvc.py \
+            --kev "$RUNNER_TEMP/kev-source/known_exploited_vulnerabilities.json" \
+            --vulnrichment "$RUNNER_TEMP/kev-source/vulnrichment" \
+            --output data/kev-ssvc.json
+
+      - name: Run tests
+        run: python3 -m unittest discover -s tests
+
+      - name: Commit changed data
+        run: |
+          if git diff --quiet -- data/kev-ssvc.json; then
+            echo "The staged dataset is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/kev-ssvc.json
+          git commit -m "Refresh staged KEV with SSVC data"
+          git pull --rebase
+          git push
