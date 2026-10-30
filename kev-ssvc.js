@@ -164,12 +164,12 @@ function renderRows() {
       <td><span class="cve-cell">${escapeHtml(row.cve)}</span></td>
       <td>${escapeHtml(row.vendor || "—")}</td>
       <td>${escapeHtml(row.product || "—")}</td>
-      <td><span class="cwe-cell">${escapeHtml((row.cwes || []).join(", ") || "—")}</span></td>
-      <td>${cvssHtml(row)}</td>
       <td>${escapeHtml(row.vulnerabilityName || "—")}</td>
+      <td>${cvssHtml(row)}</td>
       <td>${badge(row.exploitation)}</td>
       <td>${badge(row.technicalImpact)}</td>
       <td>${badge(row.automatable)}</td>
+      <td><span class="cwe-cell">${escapeHtml((row.cwes || []).join(", ") || "—")}</span></td>
       <td class="date-cell">${escapeHtml(row.dateAdded || "—")}</td>
       <td class="date-cell">${escapeHtml(row.dueDate || "—")}</td>
     </tr>`).join("");
@@ -225,11 +225,11 @@ function csvCell(value) {
 }
 
 function exportCsv() {
-  const headers = ["CVE", "Vendor", "Product", "CWE", "CVSS", "CVSS Version", "Vulnerability Name", "Exploitation State", "Technical Impact", "Automatable", "KEV Added Date", "KEV Due Date"];
+  const headers = ["CVE", "Vendor", "Product", "Vulnerability Name", "CVSS", "CVSS Version", "Exploitation State", "Technical Impact", "Automatable", "CWE", "KEV Added Date", "KEV Due Date"];
   const lines = [headers.map(csvCell).join(",")];
   state.filtered.forEach(row => lines.push([
-    row.cve, row.vendor, row.product, (row.cwes || []).join("; "), row.cvss?.score ?? "", row.cvss?.version ?? "",
-    row.vulnerabilityName, row.exploitation, row.technicalImpact, row.automatable, row.dateAdded, row.dueDate
+    row.cve, row.vendor, row.product, row.vulnerabilityName, row.cvss?.score ?? "", row.cvss?.version ?? "",
+    row.exploitation, row.technicalImpact, row.automatable, (row.cwes || []).join("; "), row.dateAdded, row.dueDate
   ].map(csvCell).join(",")));
   const blob = new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
   const link = document.createElement("a");

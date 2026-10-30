@@ -119,7 +119,7 @@ body.kev-ssvc-dashboard {
 .kev-table-scroll tbody tr { cursor: pointer; transition: background 0.15s; }
 .kev-table-scroll tbody tr:hover { background: rgba(97, 230, 164, 0.035); }
 .kev-table-scroll tbody tr:last-child td { border-bottom: 0; }
-.kev-table-scroll td:nth-child(6) { min-width: 280px; white-space: normal; line-height: 1.45; }
+.kev-table-scroll td:nth-child(4) { min-width: 280px; white-space: normal; line-height: 1.45; }
 .kev-table-scroll td:nth-child(2),
 .kev-table-scroll td:nth-child(3) { min-width: 150px; white-space: normal; }
 .cve-cell { color: var(--al-ink); font: 500 10px var(--al-mono); }
