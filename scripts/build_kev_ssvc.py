@@ -188,11 +188,8 @@ def build_entry(kev: dict[str, Any], record: dict[str, Any]) -> dict[str, Any]:
     cwes, cwe_source = extract_cwes(record, kev)
     cvss, cvss_source = extract_cvss(record)
 
-    exploitation = ssvc.get("exploitation") or "active"
     ssvc_source = ssvc.get("source") or "KEV"
-    if exploitation == "unknown":
-        exploitation = "active"
-        ssvc_source = "KEV"
+    forensic_triage = str(kev.get("forensicTriage") or "unknown").strip().casefold()
 
     return {
         "cve": cve_id,
@@ -203,7 +200,6 @@ def build_entry(kev: dict[str, Any], record: dict[str, Any]) -> dict[str, Any]:
         "cvss": cvss,
         "cvssSource": cvss_source,
         "vulnerabilityName": str(kev.get("vulnerabilityName") or ""),
-        "exploitation": exploitation,
         "technicalImpact": ssvc.get("technicalImpact") or "unknown",
         "automatable": ssvc.get("automatable") or "unknown",
         "ssvcSource": ssvc_source,
@@ -211,6 +207,7 @@ def build_entry(kev: dict[str, Any], record: dict[str, Any]) -> dict[str, Any]:
         "ssvcTimestamp": ssvc.get("timestamp") or "",
         "dateAdded": str(kev.get("dateAdded") or ""),
         "dueDate": str(kev.get("dueDate") or ""),
+        "forensicTriage": forensic_triage,
         "knownRansomwareCampaignUse": str(kev.get("knownRansomwareCampaignUse") or "Unknown"),
         "shortDescription": str(kev.get("shortDescription") or ""),
         "requiredAction": str(kev.get("requiredAction") or ""),
@@ -264,6 +261,7 @@ def build(kev_path: Path, vulnrichment_root: Path, output_path: Path) -> dict[st
             "officialSsvc": sum(1 for item in entries if item["ssvcSource"] == "CISA Vulnrichment"),
             "cvss": sum(1 for item in entries if item["cvss"]),
             "cwe": sum(1 for item in entries if item["cwes"]),
+            "forensicTriage": sum(1 for item in entries if item["forensicTriage"] != "unknown"),
         },
         "sources": {
             "kev": "https://github.com/cisagov/kev-data",
