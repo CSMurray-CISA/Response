@@ -46,15 +46,16 @@ class KevSsvcBuilderTests(unittest.TestCase):
             "vulnerabilityName": "Example vulnerability",
             "dateAdded": "2026-10-01",
             "dueDate": "2026-10-22",
+            "forensicTriage": "Yes",
         }, record)
         self.assertEqual(row["cwes"], ["CWE-79"])
         self.assertEqual(row["cweSource"], "CNA")
         self.assertEqual(row["cvss"]["score"], 9.8)
         self.assertEqual(row["technicalImpact"], "total")
         self.assertEqual(row["automatable"], "yes")
-        self.assertEqual(row["exploitation"], "active")
+        self.assertEqual(row["forensicTriage"], "yes")
 
-    def test_kev_fallback_marks_exploitation_active_without_guessing_other_ssvc(self):
+    def test_kev_fallback_keeps_unknown_ssvc_and_forensic_triage(self):
         row = builder.build_entry({
             "cveID": "CVE-2020-1234",
             "vendorProject": "Example",
@@ -62,11 +63,12 @@ class KevSsvcBuilderTests(unittest.TestCase):
             "vulnerabilityName": "Legacy vulnerability",
             "dateAdded": "2022-01-01",
             "dueDate": "2022-01-22",
+            "forensicTriage": "No",
         }, {})
-        self.assertEqual(row["exploitation"], "active")
         self.assertEqual(row["ssvcSource"], "KEV")
         self.assertEqual(row["technicalImpact"], "unknown")
         self.assertEqual(row["automatable"], "unknown")
+        self.assertEqual(row["forensicTriage"], "no")
 
 
 if __name__ == "__main__":

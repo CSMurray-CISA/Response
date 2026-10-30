@@ -34,15 +34,58 @@ class PlatformShellTests(unittest.TestCase):
             "kev-ssvc.html",
             "kev-ssvc.css",
             "kev-ssvc.js",
+            "platform-preferences.js",
             "app.js",
             "styles.css",
         ):
             self.assertTrue((ROOT / name).is_file(), name)
 
+    def test_preferences_are_available_on_every_page(self):
+        shell = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertIn('data-pref-theme="dark"', shell)
+        self.assertIn('data-pref-theme="light"', shell)
+        self.assertIn('data-pref-font="normal"', shell)
+        self.assertIn('data-pref-font="large"', shell)
+        self.assertIn('data-pref-font="extra-large"', shell)
+        for name in (
+            "advisory-analysis.html",
+            "vulnerability-dashboard.html",
+            "ssvc-dashboard.html",
+            "kev-ssvc.html",
+        ):
+            html = (ROOT / name).read_text(encoding="utf-8")
+            self.assertIn('src="platform-preferences.js"', html, name)
+
     def test_staged_kev_dataset_is_present(self):
         dataset = ROOT / "data" / "kev-ssvc.json"
         self.assertTrue(dataset.is_file())
         self.assertGreater(dataset.stat().st_size, 1000)
+
+    def test_kev_table_uses_requested_column_order(self):
+        html = (ROOT / "kev-ssvc.html").read_text(encoding="utf-8")
+        expected = [
+            'data-sort="vulnerabilityName"',
+            'data-sort="cvss"',
+            'data-sort="technicalImpact"',
+            'data-sort="automatable"',
+            'data-sort="cwes"',
+            'data-sort="dueDate"',
+            'data-sort="forensicTriage"',
+        ]
+        positions = [html.index(value) for value in expected]
+        self.assertEqual(positions, sorted(positions))
+        script = (ROOT / "kev-ssvc.js").read_text(encoding="utf-8")
+        script_positions = [script.index(f'key: "{key}"') for key in (
+            "vulnerabilityName", "cvss", "technicalImpact", "automatable", "cwes", "dueDate", "forensicTriage"
+        )]
+        self.assertEqual(script_positions, sorted(script_positions))
+
+    def test_kev_exploitation_controls_are_removed(self):
+        html = (ROOT / "kev-ssvc.html").read_text(encoding="utf-8")
+        script = (ROOT / "kev-ssvc.js").read_text(encoding="utf-8")
+        self.assertNotIn('id="exploitationFilter"', html)
+        self.assertNotIn('key: "exploitation"', script)
+        self.assertIn('id="forensicTriageFilter"', html)
 
 
 if __name__ == "__main__":
