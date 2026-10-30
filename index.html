@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A unified browser-based workspace for advisory analysis, vulnerability research, and CISA SSVC scoring."
+    />
+    <meta name="theme-color" content="#07100d" />
+    <title>Advisory Lens Platform</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #eaf5ef;
+        --muted: #8fa39a;
+        --bg: #07100d;
+        --panel: rgba(12, 23, 19, 0.96);
+        --line: #294337;
+        --accent: #61e6a4;
+        --sans: "Manrope", system-ui, sans-serif;
+        --mono: "DM Mono", ui-monospace, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--bg); }
+
+      .platform-view {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: var(--bg);
+      }
+
+      .platform-view[hidden] { display: none; }
+
+      .tool-dock {
+        position: fixed;
+        left: 50%;
+        bottom: 18px;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        max-width: calc(100% - 24px);
+        padding: 6px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: var(--panel);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45), 0 0 0 4px rgba(97, 230, 164, 0.035);
+        backdrop-filter: blur(14px);
+        transform: translateX(-50%);
+      }
+
+      .tool-dock::before {
+        content: "AL";
+        display: grid;
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        margin: 0 4px 0 1px;
+        place-items: center;
+        border: 1px solid #387d5c;
+        border-radius: 9px;
+        color: var(--accent);
+        background: #0f2119;
+        font: 500 11px var(--mono);
+      }
+
+      .tool-tab {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 38px;
+        padding: 0 14px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        color: var(--muted);
+        background: transparent;
+        font: 600 12px var(--sans);
+        white-space: nowrap;
+        cursor: pointer;
+        transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.15s;
+      }
+
+      .tool-tab:hover { color: var(--ink); background: rgba(97, 230, 164, 0.06); }
+      .tool-tab:active { transform: translateY(1px); }
+      .tool-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .tool-tab[aria-selected="true"] {
+        border-color: #315043;
+        color: #04100a;
+        background: var(--accent);
+      }
+
+      .tool-tab .tab-number {
+        color: inherit;
+        font: 500 9px var(--mono);
+        opacity: 0.72;
+      }
+
+      .tool-tab .tab-label { color: inherit; }
+
+      .open-tool {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        margin-left: 2px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        color: var(--accent);
+        background: #0f2119;
+        font: 500 16px var(--sans);
+        text-decoration: none;
+      }
+
+      .open-tool:hover { border-color: #4d896c; }
+      .open-tool:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+      @media (max-width: 670px) {
+        .tool-dock { bottom: 8px; width: calc(100% - 16px); justify-content: center; }
+        .tool-dock::before, .open-tool { display: none; }
+        .tool-tab { flex: 1; justify-content: center; min-width: 0; padding: 0 7px; font-size: 10px; }
+        .tool-tab .tab-number { display: none; }
+        .tool-tab .tab-label { overflow: hidden; font-size: 0; text-overflow: ellipsis; }
+        .tool-tab .tab-label::after { content: attr(data-short); font-size: 10px; }
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      id="advisoryView"
+      class="platform-view"
+      title="Advisory Analysis"
+      src="advisory-analysis.html"
+    ></iframe>
+    <iframe
+      id="vulnerabilityView"
+      class="platform-view"
+      title="Vulnerability Dashboard"
+      data-src="vulnerability-dashboard.html"
+      hidden
+    ></iframe>
+    <iframe
+      id="ssvcView"
+      class="platform-view"
+      title="SSVC Scoring"
+      data-src="ssvc-dashboard.html"
+      hidden
+    ></iframe>
+    <iframe
+      id="kevSsvcView"
+      class="platform-view"
+      title="KEV with SSVC"
+      data-src="kev-ssvc.html"
+      hidden
+    ></iframe>
+
+    <nav class="tool-dock" role="tablist" aria-label="Vulnerability platform tools">
+      <button class="tool-tab" id="advisoryTab" type="button" role="tab" aria-selected="true" aria-controls="advisoryView" data-tool="advisory">
+        <span class="tab-number">01</span><span class="tab-label" data-short="Advisory">Advisory Analysis</span>
+      </button>
+      <button class="tool-tab" id="vulnerabilityTab" type="button" role="tab" aria-selected="false" aria-controls="vulnerabilityView" data-tool="vulnerability" tabindex="-1">
+        <span class="tab-number">02</span><span class="tab-label" data-short="Dashboard">Vulnerability Dashboard</span>
+      </button>
+      <button class="tool-tab" id="ssvcTab" type="button" role="tab" aria-selected="false" aria-controls="ssvcView" data-tool="ssvc" tabindex="-1">
+        <span class="tab-number">03</span><span class="tab-label" data-short="SSVC">SSVC Scoring</span>
+      </button>
+      <button class="tool-tab" id="kevSsvcTab" type="button" role="tab" aria-selected="false" aria-controls="kevSsvcView" data-tool="kev-ssvc" tabindex="-1">
+        <span class="tab-number">04</span><span class="tab-label" data-short="KEV + SSVC">KEV with SSVC</span>
+      </button>
+      <a class="open-tool" id="openTool" href="advisory-analysis.html" target="_blank" rel="noopener" aria-label="Open current tool in a new tab" title="Open current tool in a new tab">↗</a>
+    </nav>
+
+    <script>
+      const tools = {
+        advisory: {
+          tab: document.getElementById("advisoryTab"),
+          view: document.getElementById("advisoryView"),
+          source: "advisory-analysis.html",
+          title: "Advisory Analysis"
+        },
+        vulnerability: {
+          tab: document.getElementById("vulnerabilityTab"),
+          view: document.getElementById("vulnerabilityView"),
+          source: "vulnerability-dashboard.html",
+          title: "Vulnerability Dashboard"
+        },
+        ssvc: {
+          tab: document.getElementById("ssvcTab"),
+          view: document.getElementById("ssvcView"),
+          source: "ssvc-dashboard.html",
+          title: "SSVC Scoring"
+        },
+        "kev-ssvc": {
+          tab: document.getElementById("kevSsvcTab"),
+          view: document.getElementById("kevSsvcView"),
+          source: "kev-ssvc.html",
+          title: "KEV with SSVC"
+        }
+      };
+
+      const toolNames = Object.keys(tools);
+      const openTool = document.getElementById("openTool");
+
+      function selectTool(name, updateHash = true) {
+        const selected = tools[name] || tools.advisory;
+
+        Object.entries(tools).forEach(([toolName, tool]) => {
+          const active = toolName === name || (!tools[name] && toolName === "advisory");
+          tool.tab.setAttribute("aria-selected", String(active));
+          tool.tab.tabIndex = active ? 0 : -1;
+          tool.view.hidden = !active;
+
+          if (active && !tool.view.src) {
+            tool.view.src = tool.view.dataset.src;
+          }
+        });
+
+        openTool.href = selected.source;
+        document.title = `${selected.title} — Advisory Lens Platform`;
+
+        if (updateHash && window.location.hash !== `#${name}`) {
+          history.replaceState(null, "", `#${name}`);
+        }
+      }
+
+      toolNames.forEach((name, index) => {
+        tools[name].tab.addEventListener("click", () => selectTool(name));
+        tools[name].tab.addEventListener("keydown", event => {
+          if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+          event.preventDefault();
+          let nextIndex = index;
+          if (event.key === 'ArrowLeft') nextIndex = (index - 1 + toolNames.length) % toolNames.length;
+          if (event.key === 'ArrowRight') nextIndex = (index + 1) % toolNames.length;
+          if (event.key === 'Home') nextIndex = 0;
+          if (event.key === 'End') nextIndex = toolNames.length - 1;
+          const nextName = toolNames[nextIndex];
+          selectTool(nextName);
+          tools[nextName].tab.focus();
+        });
+      });
+
+      window.addEventListener("hashchange", () => selectTool(window.location.hash.slice(1), false));
+      selectTool(window.location.hash.slice(1) || "advisory", false);
+    </script>
+  </body>
+</html>

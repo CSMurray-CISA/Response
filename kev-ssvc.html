@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Explore CISA KEV entries with staged CISA Vulnrichment SSVC, CVSS, and CWE data." />
+    <meta name="theme-color" content="#07100d" />
+    <title>KEV with SSVC</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="platform-theme.css" />
+    <link rel="stylesheet" href="kev-ssvc.css" />
+  </head>
+  <body class="advisory-ui kev-ssvc-dashboard">
+    <header class="kev-header">
+      <div>
+        <p class="kev-eyebrow">Staged CISA vulnerability intelligence</p>
+        <h1>KEV with <span>SSVC.</span></h1>
+        <p class="kev-intro">Filter every Known Exploited Vulnerability by its KEV dates and CISA SSVC decision points. Data is prepared hourly from CISA’s GitHub repositories, so opening this page never calls their live APIs.</p>
+      </div>
+      <div class="dataset-state" id="datasetState" aria-live="polite">
+        <span class="dataset-dot loading"></span>
+        <div><strong>Loading staged data</strong><small>Please wait…</small></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="kev-stats" aria-label="Catalog summary">
+        <article><span>Catalog entries</span><strong id="catalogStat">—</strong><small>All staged KEV records</small></article>
+        <article class="accent"><span>Selected entries</span><strong id="filteredStat">—</strong><small>Matching the current filters</small></article>
+        <article class="warning"><span>Total impact</span><strong id="impactStat">—</strong><small>Selected SSVC total impact</small></article>
+        <article class="blue"><span>Automatable</span><strong id="automatableStat">—</strong><small>Selected SSVC automatable</small></article>
+      </section>
+
+      <section class="filter-panel" aria-labelledby="filterTitle">
+        <div class="filter-heading">
+          <div><p class="kev-eyebrow">Refine the catalog</p><h2 id="filterTitle">Filters</h2></div>
+          <div class="filter-actions">
+            <button id="resetFilters" type="button">Reset filters</button>
+            <button class="export-button" id="exportCsv" type="button">↓ Export CSV</button>
+          </div>
+        </div>
+
+        <div class="filter-grid">
+          <label class="search-filter">Search
+            <input id="searchFilter" type="search" placeholder="CVE, name, CWE, vendor, or product…" />
+          </label>
+          <label>Added from
+            <input id="dateFrom" type="date" />
+          </label>
+          <label>Added through
+            <input id="dateTo" type="date" />
+          </label>
+          <label>Technical impact
+            <select id="impactFilter"><option value="">All impacts</option><option value="total">Total</option><option value="partial">Partial</option><option value="unknown">Unknown</option></select>
+          </label>
+          <label>Automatable
+            <select id="automatableFilter"><option value="">All values</option><option value="yes">Yes</option><option value="no">No</option><option value="unknown">Unknown</option></select>
+          </label>
+          <label>Exploitation
+            <select id="exploitationFilter"><option value="">All states</option><option value="active">Active</option><option value="poc">PoC</option><option value="none">None</option><option value="unknown">Unknown</option></select>
+          </label>
+          <label>Vendor
+            <select id="vendorFilter"><option value="">All vendors</option></select>
+          </label>
+          <label>Product
+            <select id="productFilter"><option value="">All products</option></select>
+          </label>
+        </div>
+      </section>
+
+      <section class="kev-table-shell" aria-labelledby="tableTitle">
+        <div class="table-summary">
+          <div><p class="kev-eyebrow">Filtered results</p><h2 id="tableTitle">Known exploited vulnerabilities</h2></div>
+          <p id="resultSummary" aria-live="polite">Loading…</p>
+        </div>
+        <div class="kev-table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th><button type="button" data-sort="cve">CVE <span>↕</span></button></th>
+                <th><button type="button" data-sort="vendor">Vendor <span>↕</span></button></th>
+                <th><button type="button" data-sort="product">Product <span>↕</span></button></th>
+                <th><button type="button" data-sort="cwes">CWE <span>↕</span></button></th>
+                <th><button type="button" data-sort="cvss">CVSS <span>↕</span></button></th>
+                <th><button type="button" data-sort="vulnerabilityName">Vulnerability name <span>↕</span></button></th>
+                <th><button type="button" data-sort="exploitation">Exploitation <span>↕</span></button></th>
+                <th><button type="button" data-sort="technicalImpact">Technical impact <span>↕</span></button></th>
+                <th><button type="button" data-sort="automatable">Automatable <span>↕</span></button></th>
+                <th><button type="button" data-sort="dateAdded">KEV added <span>↕</span></button></th>
+                <th><button type="button" data-sort="dueDate">KEV due <span>↕</span></button></th>
+              </tr>
+            </thead>
+            <tbody id="kevRows"><tr><td colspan="11" class="loading-cell">Loading staged catalog…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <label>Rows per page
+            <select id="pageSize"><option>50</option><option selected>100</option><option>250</option><option value="all">All</option></select>
+          </label>
+          <div class="pagination">
+            <button id="previousPage" type="button">← Previous</button>
+            <span id="pageStatus">Page 1</span>
+            <button id="nextPage" type="button">Next →</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="kevDetail">
+      <button class="dialog-close" id="detailClose" type="button" aria-label="Close details">×</button>
+      <div id="detailContent"></div>
+    </dialog>
+
+    <div class="kev-error hidden" id="loadError" role="alert"></div>
+    <script src="kev-ssvc.js" defer></script>
+  </body>
+</html>

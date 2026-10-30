@@ -1,0 +1,536 @@
+:root {
+  --al-ink: #eaf5ef;
+  --al-muted: #8fa39a;
+  --al-faint: #586a62;
+  --al-bg: #07100d;
+  --al-panel: #0c1713;
+  --al-panel-2: #101d18;
+  --al-input: #09130f;
+  --al-line: #20322a;
+  --al-line-strong: #315043;
+  --al-accent: #61e6a4;
+  --al-accent-dark: #183d2d;
+  --al-danger: #ff705f;
+  --al-warning: #f4c05e;
+  --al-blue: #65baff;
+  --al-sans: "Manrope", system-ui, sans-serif;
+  --al-mono: "DM Mono", ui-monospace, monospace;
+
+  /* Map both dashboards' original variables onto the Advisory Lens palette. */
+  --bg-light: var(--al-bg);
+  --text-light: var(--al-ink);
+  --panel-light: var(--al-panel);
+  --border-light: var(--al-line);
+  --link-light: var(--al-accent);
+  --bg-dark: #050c09;
+  --text-dark: var(--al-ink);
+  --panel-dark: var(--al-panel);
+  --border-dark: var(--al-line);
+  --link-dark: var(--al-accent);
+  --input-bg-dark: var(--al-input);
+  --input-text-dark: var(--al-ink);
+  --heat-bar: var(--al-accent);
+
+  --bg: var(--al-bg);
+  --fg: var(--al-ink);
+  --surface: var(--al-panel);
+  --hover: rgba(97, 230, 164, 0.045);
+  --border: var(--al-line);
+  --muted: var(--al-muted);
+  --sev-critical: #c74637;
+  --sev-high: #d86f42;
+  --sev-medium: #c99a3d;
+  --sev-low: #3b9b6c;
+  --sev-unknown: #66786f;
+}
+
+html[data-theme="dark"] {
+  --bg: var(--al-bg);
+  --fg: var(--al-ink);
+  --surface: var(--al-panel);
+  --hover: rgba(97, 230, 164, 0.045);
+  --border: var(--al-line);
+  --muted: var(--al-muted);
+}
+
+html[data-theme="light"] {
+  --bg: #edf7f1;
+  --fg: #10251b;
+  --surface: #f8fcfa;
+  --hover: #e2f4e9;
+  --border: #bfd7ca;
+  --muted: #577064;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--al-bg); scroll-behavior: smooth; }
+
+body.advisory-ui {
+  min-width: 320px;
+  min-height: 100vh;
+  padding-bottom: 92px;
+  color: var(--al-ink);
+  background: var(--al-bg);
+  font-family: var(--al-sans);
+  line-height: 1.55;
+}
+
+body.advisory-ui::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(58, 151, 106, 0.16), transparent 38%),
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
+}
+
+body.advisory-ui > * { position: relative; z-index: 1; }
+body.advisory-ui a { color: var(--al-accent); }
+body.advisory-ui a:hover { color: #8cf0bc; }
+
+body.advisory-ui button,
+body.advisory-ui input,
+body.advisory-ui select,
+body.advisory-ui textarea { font-family: inherit; }
+
+body.advisory-ui input,
+body.advisory-ui select,
+body.advisory-ui textarea {
+  border: 1px solid var(--al-line-strong);
+  border-radius: 8px;
+  outline: 0;
+  color: var(--al-ink);
+  background: var(--al-input);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+body.advisory-ui input:focus,
+body.advisory-ui select:focus,
+body.advisory-ui textarea:focus {
+  border-color: #59b986;
+  box-shadow: 0 0 0 3px rgba(97, 230, 164, 0.08);
+}
+
+body.advisory-ui input::placeholder,
+body.advisory-ui textarea::placeholder { color: #6f8279; }
+
+body.advisory-ui button {
+  border: 1px solid var(--al-line-strong);
+  border-radius: 8px;
+  color: var(--al-muted);
+  background: #0e2018;
+  font-weight: 700;
+  transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.15s;
+}
+
+body.advisory-ui button:hover:not(:disabled) {
+  border-color: #4d896c;
+  color: var(--al-ink);
+  background: #13291f;
+  transform: translateY(-1px);
+}
+
+body.advisory-ui button:focus-visible {
+  outline: 2px solid var(--al-accent);
+  outline-offset: 2px;
+}
+
+body.advisory-ui button:disabled { opacity: 0.42; cursor: not-allowed; }
+
+/* Vulnerability Dashboard */
+body.vuln-dashboard { margin: 0; }
+
+body.vuln-dashboard nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: 50px;
+  padding: 6px max(70px, calc((100% - 1380px) / 2));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(7, 16, 13, 0.94);
+  backdrop-filter: blur(14px);
+}
+
+body.vuln-dashboard nav button {
+  flex: 0 1 230px;
+  padding: 9px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--al-muted);
+  background: transparent;
+  font: 600 12px var(--al-sans);
+}
+
+body.vuln-dashboard nav button.active {
+  border-color: var(--al-line-strong);
+  color: var(--al-accent);
+  background: var(--al-accent-dark);
+}
+
+body.vuln-dashboard .mode {
+  position: fixed;
+  top: 8px;
+  right: 14px;
+  z-index: 60;
+  padding: 7px 11px;
+  border-color: var(--al-line);
+  color: var(--al-muted);
+  background: var(--al-panel);
+  font: 500 10px var(--al-mono);
+}
+
+body.vuln-dashboard .tabs > section { padding: 0; }
+
+body.vuln-dashboard header.cve-header {
+  top: 50px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 30px;
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(7, 16, 13, 0.91);
+  backdrop-filter: blur(14px);
+}
+
+body.vuln-dashboard header.cve-header h1 {
+  color: var(--al-ink);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+body.vuln-dashboard header.cve-header h1::before {
+  content: "VD";
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #387d5c;
+  border-radius: 9px;
+  color: var(--al-accent);
+  background: #0f2119;
+  font: 500 10px var(--al-mono);
+}
+
+body.vuln-dashboard #cve {
+  min-width: min(360px, 100%);
+  min-height: 44px;
+  padding: 0 15px;
+  border-color: var(--al-line-strong);
+  color: var(--al-ink);
+  background: var(--al-input);
+  font-size: 14px;
+}
+
+body.vuln-dashboard .btn,
+body.vuln-dashboard.dark .btn {
+  padding: 10px 15px;
+  border-color: var(--al-line-strong);
+  color: var(--al-muted);
+  background: #0e2018;
+  font-size: 12px;
+}
+
+body.vuln-dashboard #go {
+  border-color: var(--al-accent);
+  color: #04100a;
+  background: var(--al-accent);
+}
+
+body.vuln-dashboard main.cve-main {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 24px 30px 100px;
+  gap: 16px;
+}
+
+body.vuln-dashboard .panel,
+body.vuln-dashboard.dark .panel {
+  overflow: hidden;
+  border: 1px solid var(--al-line);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(14, 26, 22, 0.98), rgba(10, 21, 17, 0.98));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+}
+
+body.vuln-dashboard .panel > header,
+body.vuln-dashboard.dark .panel > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 18px;
+  border-color: var(--al-line);
+  background: #0a1511;
+}
+
+body.vuln-dashboard .panel > header h2 {
+  color: var(--al-ink);
+  font-size: 13px;
+  letter-spacing: -0.015em;
+}
+
+body.vuln-dashboard .content { padding: 18px; }
+body.vuln-dashboard .item,
+body.vuln-dashboard.dark .item { border-color: var(--al-line); }
+body.vuln-dashboard .title { color: var(--al-ink); }
+body.vuln-dashboard .meta { color: var(--al-muted); font-size: 12px; }
+
+body.vuln-dashboard .metrics-box,
+body.vuln-dashboard.dark .metrics-box {
+  border: 1px solid var(--al-line);
+  background: rgba(97, 230, 164, 0.045);
+}
+
+body.vuln-dashboard .metrics-box .title,
+body.vuln-dashboard .metrics-box th { color: var(--al-accent); }
+body.vuln-dashboard .metrics-box th,
+body.vuln-dashboard .metrics-box td { border-color: rgba(97, 230, 164, 0.16); }
+
+body.vuln-dashboard .copy-link,
+body.vuln-dashboard.dark .copy-link {
+  border-color: var(--al-line);
+  color: var(--al-muted);
+  background: var(--al-input);
+}
+
+body.vuln-dashboard .feed,
+body.vuln-dashboard.dark .feed {
+  width: min(360px, 100%);
+  padding: 18px;
+  border: 1px solid var(--al-line);
+  border-radius: 12px;
+  color: var(--al-ink);
+  background: linear-gradient(145deg, #0e1a16, #0a1511);
+  box-shadow: none;
+}
+
+body.vuln-dashboard .feeds-header {
+  margin: 0;
+  padding: 58px 24px 30px;
+  color: var(--al-ink);
+  font-size: clamp(30px, 5vw, 50px);
+  letter-spacing: -0.055em;
+}
+
+body.vuln-dashboard .feed-container { padding: 0 24px 110px; }
+body.vuln-dashboard .feed ul li a,
+body.vuln-dashboard.dark .feed ul li a { color: var(--al-accent); }
+
+body.vuln-dashboard #watchContent,
+body.vuln-dashboard.dark #watchContent {
+  border: 1px solid var(--al-line);
+  background: var(--al-input);
+}
+
+body.vuln-dashboard #toast {
+  border: 1px solid var(--al-line-strong);
+  color: var(--al-ink);
+  background: var(--al-panel-2);
+  font: 500 11px var(--al-mono);
+}
+
+body.vuln-dashboard #loading {
+  color: var(--al-accent);
+  background: rgba(4, 10, 7, 0.84);
+  font: 500 15px var(--al-mono);
+  backdrop-filter: blur(8px);
+}
+
+body.vuln-dashboard #attackModal,
+body.vuln-dashboard.dark #attackModal { background: var(--al-bg); }
+
+body.vuln-dashboard .settings-content,
+body.vuln-dashboard .prev-content,
+body.vuln-dashboard.dark .settings-content,
+body.vuln-dashboard.dark .prev-content,
+body.vuln-dashboard #analysisModal > div,
+body.vuln-dashboard #googleSearchModal > div {
+  border: 1px solid var(--al-line) !important;
+  color: var(--al-ink) !important;
+  background: var(--al-panel) !important;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+}
+
+body.vuln-dashboard #analysisBody,
+body.vuln-dashboard #searchPrompt {
+  border-color: var(--al-line) !important;
+  color: var(--al-ink) !important;
+  background: var(--al-input) !important;
+}
+
+body.vuln-dashboard .low { background: #26734e; }
+body.vuln-dashboard .medium { background: #997026; }
+body.vuln-dashboard .high { background: #a95435; }
+body.vuln-dashboard .critical { background: #a03e35; }
+body.vuln-dashboard .yes { color: #bdf5d6; background: #1b4c35; }
+body.vuln-dashboard .no { color: #ffc5bd; background: #50251f; }
+
+/* SSVC Scoring */
+body.ssvc-dashboard {
+  width: min(1440px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 48px 0 110px;
+}
+
+body.ssvc-dashboard #pageTitle {
+  margin: 0 0 26px;
+  color: var(--al-ink);
+  font-size: clamp(31px, 4.5vw, 54px);
+  line-height: 1.06;
+  letter-spacing: -0.055em;
+  font-weight: 700;
+}
+
+body.ssvc-dashboard #pageTitle::before {
+  content: "Browser-based vulnerability triage";
+  display: block;
+  margin-bottom: 11px;
+  color: var(--al-accent);
+  font: 500 10px var(--al-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+body.ssvc-dashboard .vendor-tabs {
+  gap: 7px;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+body.ssvc-dashboard .vendor-tab {
+  padding: 8px 13px;
+  border: 1px solid var(--al-line);
+  border-radius: 999px;
+  color: var(--al-muted);
+  background: var(--al-panel);
+  font: 600 11px var(--al-sans);
+}
+
+body.ssvc-dashboard .vendor-tab[aria-selected="true"] {
+  border-color: #3d7b5d;
+  color: #04100a;
+  background: var(--al-accent);
+}
+
+body.ssvc-dashboard .grid { gap: 14px; }
+
+body.ssvc-dashboard .inputs,
+body.ssvc-dashboard .controls,
+body.ssvc-dashboard #exploitedInputs {
+  padding: 15px;
+  border: 1px solid var(--al-line);
+  border-radius: 10px;
+  background: rgba(12, 23, 19, 0.91);
+}
+
+body.ssvc-dashboard .inputs { gap: 14px; }
+body.ssvc-dashboard .inputs label,
+body.ssvc-dashboard .controls label { color: var(--al-muted); font-size: 11px; }
+body.ssvc-dashboard .inputs strong { color: var(--al-ink); font-size: 12px; }
+
+body.ssvc-dashboard input,
+body.ssvc-dashboard select,
+body.ssvc-dashboard button {
+  min-height: 36px;
+  padding: 7px 10px;
+  border-radius: 8px;
+}
+
+body.ssvc-dashboard #loadBtn {
+  border-color: var(--al-accent);
+  color: #04100a;
+  background: var(--al-accent);
+}
+
+body.ssvc-dashboard #q { flex: 1 1 320px; }
+body.ssvc-dashboard #msg { font: 400 10px var(--al-mono); }
+body.ssvc-dashboard .source-note { color: var(--al-faint); line-height: 1.6; }
+
+body.ssvc-dashboard .table-wrap {
+  margin-top: 2px;
+  border: 1px solid var(--al-line);
+  border-radius: 12px;
+  background: rgba(12, 23, 19, 0.94);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+}
+
+body.ssvc-dashboard table { color: var(--al-ink); font-size: 11px; }
+body.ssvc-dashboard th,
+body.ssvc-dashboard td { padding: 12px 11px; border-color: var(--al-line); }
+
+body.ssvc-dashboard th {
+  color: var(--al-faint);
+  background: #0a1511;
+  font: 500 9px var(--al-mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+body.ssvc-dashboard tr:hover,
+body.ssvc-dashboard tr.main-row.open { background: rgba(97, 230, 164, 0.035); }
+body.ssvc-dashboard .cve-link { color: var(--al-accent); font-family: var(--al-mono); }
+body.ssvc-dashboard .muted { color: var(--al-muted); }
+
+body.ssvc-dashboard .detail-grid {
+  grid-template-columns: minmax(140px, 180px) 1fr;
+  gap: 9px 16px;
+  padding: 8px 0;
+}
+
+body.ssvc-dashboard .detail-grid b {
+  color: var(--al-faint);
+  font: 500 10px var(--al-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+body.ssvc-dashboard .detail pre {
+  border-color: var(--al-line);
+  border-radius: 8px;
+  color: #b7c5be;
+  background: var(--al-input);
+}
+
+body.ssvc-dashboard .vector { color: #b7c5be; font-family: var(--al-mono); }
+
+body.ssvc-dashboard .badge {
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  font: 700 9px var(--al-mono);
+  letter-spacing: 0.03em;
+}
+
+body.ssvc-dashboard .TOTAL { color: #f0d7ff; background: #53336a; }
+body.ssvc-dashboard .PARTIAL { color: #d7e2ff; background: #344b6a; }
+body.ssvc-dashboard .YES { color: #c9f9df; background: #235a40; }
+body.ssvc-dashboard .NO { color: #d2ddd7; background: #3f5148; }
+body.ssvc-dashboard .VARIES { color: #c8f5e8; background: #216153; }
+body.ssvc-dashboard .NONE { color: #d2ddd7; background: #405249; }
+body.ssvc-dashboard .POC { color: #fff0bd; background: #765b22; }
+body.ssvc-dashboard .ACTIVE { color: #ffd8d2; background: #71352e; }
+body.ssvc-dashboard .CHECKING { color: #d7e2ff; background: #344b6a; }
+body.ssvc-dashboard .UNAVAILABLE { color: #e6d8cf; background: #5c463a; }
+
+@media (max-width: 760px) {
+  body.vuln-dashboard nav { padding-inline: 8px; padding-right: 86px; }
+  body.vuln-dashboard nav button { padding-inline: 8px; font-size: 10px; }
+  body.vuln-dashboard header.cve-header { padding: 18px 16px; }
+  body.vuln-dashboard main.cve-main { padding: 16px 16px 100px; }
+  body.vuln-dashboard #cve { min-width: 100%; }
+
+  body.ssvc-dashboard { width: min(100% - 28px, 1440px); padding-top: 28px; }
+  body.ssvc-dashboard .inputs { grid-template-columns: 1fr; }
+  body.ssvc-dashboard .detail-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.advisory-ui *,
+  body.advisory-ui *::before,
+  body.advisory-ui *::after { scroll-behavior: auto !important; transition: none !important; }
+}
