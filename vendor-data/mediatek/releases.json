@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T12:21:23.345880+00:00",
+  "generated_at": "2026-11-01T13:17:12.199584+00:00",
   "vendor": "MediaTek",
   "source": "https://www.mediatek.com/product-security-bulletin",
   "releases": [
@@ -101,6 +101,7 @@
     }
   ],
   "warnings": [
+    "MediaTek https://www.mediatek.com/product-security-bulletin/November-2026: Failed to download https://www.mediatek.com/product-security-bulletin/November-2026: 404 Client Error: Not Found for url: https://www.mediatek.com/product-security-bulletin/November-2026",
     "MediaTek https://www.mediatek.com/product-security-bulletin/February-2026: Failed to download https://www.mediatek.com/product-security-bulletin/February-2026: 404 Client Error: Not Found for url: https://www.mediatek.com/product-security-bulletin/February-2026"
   ]
 }
