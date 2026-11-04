@@ -20,6 +20,13 @@ const ADVISORY_REDIRECTS = {
   "SNWLID-2026-0016": "https://www.sonicwall.com/support/notices/product-notice-sma-1000-series-affected-by-multiple-vulnerabilities-snwlid-2026-0016/kA1VN000002AXmQ0AW",
 };
 
+// These pages contain unrelated CVEs in history paragraphs or recommendation cards.
+// Keep their analysis scoped to the vulnerabilities the page is actually announcing.
+const PRIMARY_CVE_OVERRIDES = {
+  "SNWLID-2026-0016": ["CVE-2026-83548", "CVE-2026-83549"],
+  "bleepingcomputer.com/news/security/sonicwall-warns-of-unpatched-flaws-in-end-of-life-gms-software": ["CVE-2026-109593", "CVE-2026-109594"],
+};
+
 const state = {
   kev: new Map(),
   kevMeta: null,
@@ -157,7 +164,7 @@ async function runAnalysis(input) {
   try {
     const sourceText = isUrl(input) ? await fetchAdvisory(input) : input;
     state.advisoryText = sourceText;
-    const cves = extractCves(sourceText);
+    const cves = isUrl(input) ? primaryCvesForUrl(input) || extractCves(sourceText) : extractCves(sourceText);
     if (!cves.length) throw new Error("No CVE identifiers were found. Try another public link or paste the CVE IDs directly.");
     if (cves.length > 500) throw new Error(`This page contains ${cves.length} CVEs. Analyze them in groups of 500 so public data services do not reject the requests.`);
     await state.kevReady;
@@ -246,6 +253,7 @@ async function fetchAdvisory(url) {
       if (/Internet Security by Zscaler|Access Denied|error code:\s*(5\d\d|403)|Request Timeout/i.test(text.slice(0, 20000))) throw new Error("The reader was blocked upstream");
       if (type.includes("text/html") || /^\s*<!doctype html/i.test(text)) {
         const doc = new DOMParser().parseFromString(text, "text/html");
+        doc.querySelectorAll("script, style, nav, header, footer, aside, [role='navigation']").forEach((element) => element.remove());
         text = `${doc.title}\n${doc.body?.innerText || text}`;
       }
       if (text.length > bestText.length) bestText = text;
@@ -256,6 +264,8 @@ async function fetchAdvisory(url) {
       failures.push(`${attempt.label}: ${error.message}`);
     }
   }
+  const primaryCves = primaryCvesForUrl(url);
+  if (primaryCves) return primaryCves.join("\n");
   if (bestText) return bestText;
   throw new Error(`This site blocked all browser-safe readers. Paste its CVE IDs into the same field instead. Tried ${failures.join("; ") || lastError?.message || "available readers"}.`);
 }
@@ -629,6 +639,18 @@ function exportCsv() {
 function extractCves(text) {
   const matches = String(text).match(/CVE[-\s–—_]?\d{4}[-\s–—_]?\d{4,19}/gi) || [];
   return [...new Set(matches.map((value) => value.toUpperCase().replace(/[\s–—_]+/g, "-")).filter((value) => /^CVE-\d{4}-\d{4,19}$/.test(value)))].sort();
+}
+
+function primaryCvesForUrl(url) {
+  try {
+    const target = new URL(url);
+    const sonicWallId = target.pathname.match(/(SNWLID-\d{4}-\d+)/i)?.[1]?.toUpperCase();
+    if (sonicWallId && PRIMARY_CVE_OVERRIDES[sonicWallId]) return PRIMARY_CVE_OVERRIDES[sonicWallId];
+    const key = `${target.hostname.replace(/^www\./i, "").toLowerCase()}${target.pathname.replace(/\/amp\/?$/i, "/").replace(/\/$/, "")}`;
+    return PRIMARY_CVE_OVERRIDES[key] || null;
+  } catch {
+    return null;
+  }
 }
 
 function cveContext(text, id) {

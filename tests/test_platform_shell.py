@@ -98,6 +98,13 @@ class PlatformShellTests(unittest.TestCase):
         self.assertIn("bleepingcomputer\\.com", script)
         self.assertIn('target.pathname = `${target.pathname.replace(/\\/$/, "")}/amp/`', script)
 
+    def test_known_pages_are_scoped_to_primary_cves(self):
+        script = (ROOT / "app.js").read_text(encoding="utf-8")
+        self.assertIn('"SNWLID-2026-0016": ["CVE-2026-83548", "CVE-2026-83549"]', script)
+        self.assertIn('["CVE-2026-109593", "CVE-2026-109594"]', script)
+        self.assertIn("primaryCvesForUrl(input) || extractCves(sourceText)", script)
+        self.assertIn("script, style, nav, header, footer, aside", script)
+
 
 if __name__ == "__main__":
     unittest.main()
