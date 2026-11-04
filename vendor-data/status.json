@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T14:07:31.869422+00:00",
+  "generated_at": "2026-11-04T14:28:27.510011+00:00",
   "vendors": {
     "adobe": 12,
     "apple": 12,
@@ -8,7 +8,7 @@
     "mediatek": 12,
     "mozilla": 12,
     "qualcomm": 0,
-    "solarwinds": 9
+    "solarwinds": 8
   },
   "warnings": []
 }
