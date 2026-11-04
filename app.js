@@ -14,6 +14,12 @@ const ENDPOINTS = {
   },
 };
 
+// Some vendors retire advisory URLs while keeping the content at a new official URL.
+// Preserve the original URL as the displayed source, but read the maintained replacement.
+const ADVISORY_REDIRECTS = {
+  "SNWLID-2026-0016": "https://www.sonicwall.com/support/notices/product-notice-sma-1000-series-affected-by-multiple-vulnerabilities-snwlid-2026-0016/kA1VN000002AXmQ0AW",
+};
+
 const state = {
   kev: new Map(),
   kevMeta: null,
@@ -197,11 +203,20 @@ function cancelAnalysis(showMessage = true) {
 }
 
 async function fetchAdvisory(url) {
-  const target = new URL(url);
-  const corsDev = `https://proxy.cors.dev/${url}`;
-  const allOrigins = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-  const renderedReader = `https://cors.tools/read?url=${encodeURIComponent(url)}&render=true&format=markdown`;
-  const jinaReader = `https://r.jina.ai/${url}`;
+  const requestedTarget = new URL(url);
+  const sonicWallId = /(^|\.)psirt\.global\.sonicwall\.com$/i.test(requestedTarget.hostname)
+    ? requestedTarget.pathname.match(/\/(SNWLID-\d{4}-\d+)/i)?.[1]?.toUpperCase()
+    : "";
+  const target = new URL(ADVISORY_REDIRECTS[sonicWallId] || url);
+  const isBleepingComputer = /(^|\.)bleepingcomputer\.com$/i.test(target.hostname);
+  if (isBleepingComputer && !/\/amp\/?$/i.test(target.pathname)) {
+    target.pathname = `${target.pathname.replace(/\/$/, "")}/amp/`;
+  }
+  const advisoryUrl = target.href;
+  const corsDev = `https://proxy.cors.dev/${advisoryUrl}`;
+  const allOrigins = `https://api.allorigins.win/raw?url=${encodeURIComponent(advisoryUrl)}`;
+  const renderedReader = `https://cors.tools/read?url=${encodeURIComponent(advisoryUrl)}&render=true&format=markdown`;
+  const jinaReader = `https://r.jina.ai/${advisoryUrl}`;
   const isMicrosoft = /(^|\.)msrc\.microsoft\.com$/i.test(target.hostname);
   const isAndroid = /(^|\.)source\.android\.com$/i.test(target.hostname);
   const msrcRelease = isMicrosoft ? target.pathname.match(/\/releaseNote\/([^/]+)/i)?.[1] : "";

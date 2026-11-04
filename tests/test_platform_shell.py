@@ -87,6 +87,17 @@ class PlatformShellTests(unittest.TestCase):
         self.assertNotIn('key: "exploitation"', script)
         self.assertIn('id="forensicTriageFilter"', html)
 
+    def test_retired_sonicwall_advisory_uses_official_replacement(self):
+        script = (ROOT / "app.js").read_text(encoding="utf-8")
+        self.assertIn('"SNWLID-2026-0016"', script)
+        self.assertIn("www.sonicwall.com/support/notices/product-notice-sma-1000-series", script)
+        self.assertIn("ADVISORY_REDIRECTS[sonicWallId] || url", script)
+
+    def test_bleepingcomputer_uses_its_readable_amp_article(self):
+        script = (ROOT / "app.js").read_text(encoding="utf-8")
+        self.assertIn("bleepingcomputer\\.com", script)
+        self.assertIn('target.pathname = `${target.pathname.replace(/\\/$/, "")}/amp/`', script)
+
 
 if __name__ == "__main__":
     unittest.main()
